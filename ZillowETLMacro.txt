@@ -1,0 +1,107 @@
+Sub ZillowETL()
+Dim Original As Worksheet
+Dim ETL As Worksheet
+Dim wb As Workbook
+Set Original = Sheets("ZillowOriginalByZIP")
+Set ETL = Sheets("ZillowETL")
+Dim lRow As Variant
+Dim lCol As Variant
+Dim dateMax As Integer
+Dim dateCount As Integer
+Dim Duplicate As Variant
+Dim dupCount As Integer
+Dim homeValue As Variant
+Dim ETLRowCount As Integer
+'Sets up the ETL sheet with headers
+'Sheets.Add.Name = "ZillowETL"
+Original.Range(Cells(1, 1), Cells(1, 9)).Copy
+ETL.Range("A1").PasteSpecial
+ETL.Cells(1, 10) = "Date"
+ETL.Cells(1, 11) = "Home Value"
+lRow = Original.Cells(Rows.Count, 1).End(xlUp).Row
+lCol = Original.Cells(1, Columns.Count).End(xlToLeft).Column
+dateMax = lCol - 9
+Original.Select
+i = 1
+x = 2
+dupCount = 2
+dateCount = 10
+
+'Copies all the info up to the dates
+ActiveSheet.Range(Cells(x, 1), Cells(lRow, 9)).Copy
+
+Duplicate = Cells(1, dateCount).Value
+ETL.Select
+ActiveSheet.Cells(x, 1).Select
+ActiveCell.PasteSpecial
+Original.Select
+ActiveSheet.Range(Cells(2, dateCount), Cells(lRow, dateCount)).Select
+Cells(dupCount, 10).Value = Duplicate
+Do While dupCount < lRow
+    ETL.Cells(dupCount, 10).Value = Duplicate
+    dupCount = dupCount + 1
+    
+Loop
+
+End Sub
+
+Sub Test()
+'copied over, can delete when merging
+Dim Original As Worksheet
+Dim ETL As Worksheet
+Dim wb As Workbook
+Set Original = Sheets("ZillowOriginalByZIP")
+Set ETL = Sheets("ZillowETL")
+Dim lRow As Variant
+Dim lCol As Variant
+Dim dupCount As Integer
+lRow = Original.Cells(Rows.Count, 1).End(xlUp).Row
+lCol = Original.Cells(1, Columns.Count).End(xlToLeft).Column
+Dim ETLRowCount As Integer
+ETLRowCount = lRow
+x = 2
+dateCount = 10
+dupCount = 2
+
+Original.Range(Cells(x, 1), Cells(lRow, 9)).Copy
+Duplicate = Cells(1, dateCount).Value
+ETL.Select
+ETL.Cells(x, 1).Select
+ActiveCell.PasteSpecial
+
+Do While dupCount < lRow
+   ETL.Cells(dupCount, 10).Value = Duplicate
+    dupCount = dupCount + 1
+Loop
+
+Original.Select
+Original.Range(Cells(2, dateCount), Cells(lRow, dateCount)).Copy
+ETL.Select
+ETL.Cells(x, 11).Select
+ActiveCell.PasteSpecial
+
+End Sub
+
+
+Original.Range(Cells(2, 1), Cells(lRow, 9)).Copy
+Do While dateCount < lCol - 303
+    
+    Duplicate = Cells(1, dateCount).Value
+    ETL.Select
+    ETL.Cells(x, 1).Select
+    ActiveCell.PasteSpecial
+    x = x + lRow
+
+    Do While dupCount < lRow
+        ETL.Cells(dupCount, 10).Value = Duplicate
+        dupCount = dupCount + 1
+    Loop
+
+    Original.Select
+    Original.Range(Cells(2, dateCount), Cells(lRow, dateCount)).Copy
+    ETL.Select
+    ETL.Cells(x, 11).Select
+    ActiveCell.PasteSpecial
+Loop
+
+
